@@ -32,6 +32,10 @@ template(name="{{ tmpl.name }}" type="string" string="{{ tmpl.properties }}")
 {% endfor %}
 {% endfor %}
 
+{% if rsyslog_action_config_string is defined %}
+{{ rsyslog_action_config_string }}
+{% endif %}
+
 {% if rsyslog_forward_enable | default(false) %}
 # Forward raw syslog to {{ rsyslog_forward_target }} over {{ rsyslog_forward_protocol | upper }}
 *.* action(

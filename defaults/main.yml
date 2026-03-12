@@ -19,15 +19,13 @@ rsyslog_configure_firewall: true
 # Where remote logs are stored
 # rsyslog_remote_root: /var/log/remote
 # rsyslog_template_remote_log:
-#
-#   # type: list — properties is a list of rsyslog property()/constant() statements
-#   - name: "RemoteLogs"
+#   - name: "RemoteLogsNamed"
 #     type: "list"
 #     properties:
 #       - 'constant(value="{{ rsyslog_remote_root }}/")'
 #       - 'property(name="HOSTNAME")'
 #       - 'constant(value="/")'
-#       - 'property(name="PROGRAMNAME" onEmpty="unknown")'
+#       - 'property(name="PROGRAMNAME")'
 #       - 'constant(value="-")'
 #       - 'property(name="$YEAR")'
 #       - 'constant(value="-")'
@@ -35,12 +33,27 @@ rsyslog_configure_firewall: true
 #       - 'constant(value="-")'
 #       - 'property(name="$DAY")'
 #       - 'constant(value=".log")'
-#     action:
-#       - selector: "*.*"
-#         type: "omfile"
-#         options:
-#           DynaFile: "RemoteLogs"
-#           createDirs: "on"
+#   - name: "RemoteLogsUnknown"
+#     type: "list"
+#     properties:
+#       - 'constant(value="{{ rsyslog_remote_root }}/")'
+#       - 'property(name="HOSTNAME")'
+#       - 'constant(value="/")'
+#       - 'property(name="PROGRAMNAME")'
+#       - 'constant(value="-")'
+#       - 'property(name="$YEAR")'
+#       - 'constant(value="-")'
+#       - 'property(name="$MONTH")'
+#       - 'constant(value="-")'
+#       - 'property(name="$DAY")'
+#       - 'constant(value=".log")'
+# rsyslog_action_config_string: |
+#   # Route to file based on whether programname is set
+#   if ($programname == "") then {
+#     action(type="omfile" DynaFile="RemoteLogsUnknown" createDirs="on")
+#   } else {
+#     action(type="omfile" DynaFile="RemoteLogsNamed" createDirs="on")
+#   }
 #
 #   # type: string — properties is a plain string (the log path)
 #   - name: "RemoteLogs"
