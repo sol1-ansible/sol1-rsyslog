@@ -9,6 +9,11 @@
   set_fact:
     _rsyslog_install_packages: "{{ rsyslog_packages | union(rsyslog_additional_packages) }}"
 
+- name: Add firewall packages if rsyslog_firewall is true
+  set_fact:
+    _rsyslog_install_packages: "{{ _rsyslog_install_packages | union(_rsyslog_firewall_packages) }}"
+  when: rsyslog_configure_firewall | default(false)
+
 - name: debug packages
   debug:
     msg: 

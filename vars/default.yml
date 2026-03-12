@@ -1,2 +1,5 @@
 _rsyslog_packages:
   - rsyslog
+
+_rsyslog_firewall_packages:
+  - python3-firewall
