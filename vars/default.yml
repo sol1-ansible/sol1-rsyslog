@@ -1,2 +1,2 @@
-vector_packages:
- - vector 
+_rsyslog_packages:
+  - rsyslog

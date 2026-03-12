@@ -1,6 +1,6 @@
 ---
-- name: Ensure rsyslog is present
+- name: Install packages
   package:
-    name: rsyslog
+    name: "{{ _rsyslog_install_packages }}"
     state: present
 

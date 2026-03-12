@@ -15,11 +15,11 @@
     enabled: true
 
 - name: Open firewall port (firewalld)
-  when: rsyslog_configure_firewall | bool
-  firewalld:
-    service: "{{ rsyslog_listener_proto }}-port"
-    port: "{{ rsyslog_listener_port }}/{{ rsyslog_listener_proto }}"
+  ansible.posix.firewalld:
+    port: "{{ rsyslog_listener_port }}/{{ item }}"
     permanent: true
     state: enabled
-    immediate: yes
+    immediate: true
+  loop: "{{ rsyslog_listener_proto }}"
+  when: rsyslog_configure_firewall | bool
   notify: reload firewalld

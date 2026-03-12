@@ -13,12 +13,27 @@ input(
 # Automatically create any needed directories
 global(createDirs="on")
 
-# Logs saved to {{ rsyslog_remote_log }}
-template(name="PerHost" type="string" string="{{ rsyslog_remote_log }}")
+{% for tmpl in rsyslog_templates | default([]) %}
+# Template: {{ tmpl.name }}
+{% if tmpl.type == 'list' %}
+template(name="{{ tmpl.name }}" type="list") {
+{% for prop in tmpl.properties | default([]) %}
+  {{ prop }}
+{% endfor %}
+}
+{% elif tmpl.type == 'string' %}
+template(name="{{ tmpl.name }}" type="string" string="{{ tmpl.properties }}")
+{% endif %}
 
-
-*.*  ?PerHostLog
-
+{% for act in tmpl.action | default([]) %}
+{{ act.selector }} action(
+  type="{{ act.type }}"
+{% for key, value in act.options.items() %}
+  {{ key }}="{{ value }}"
+{% endfor %}
+)
+{% endfor %}
+{% endfor %}
 
 {% if rsyslog_forward_enable | default(false) %}
 # Forward raw syslog to Vector over {{ rsyslog_forward_protocol | upper }}

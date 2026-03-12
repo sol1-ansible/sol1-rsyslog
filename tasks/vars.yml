@@ -1,0 +1,34 @@
+---
+
+- name: Get default rsyslog_packages if not defined
+  set_fact:
+    rsyslog_packages: "{{ _rsyslog_packages }}"
+  when: rsyslog_packages is not defined
+
+- name: Set install packages
+  set_fact:
+    _rsyslog_install_packages: "{{ rsyslog_packages | union(rsyslog_additional_packages) }}"
+
+- name: debug packages
+  debug:
+    msg: 
+      - rsyslog_packages: "{{ rsyslog_packages }}"
+      - rsyslog_additional_packages: "{{ rsyslog_additional_packages }}"
+      - _rsyslog_install_packages: "{{ _rsyslog_install_packages }}"
+
+- name: Merge rsyslog_template_remote_log into rsyslog_templates
+  set_fact:
+    rsyslog_templates: "{{ rsyslog_templates | default([]) | union(rsyslog_template_remote_log | default([])) }}"
+  when: rsyslog_template_remote_log is defined
+
+- name: Validate template types are 'string' or 'list'
+  assert:
+    that:
+      - item.type in ['string', 'list']
+    fail_msg: "Template '{{ item.name }}' has invalid type '{{ item.type }}'. Must be 'string' or 'list'."
+    success_msg: "Template '{{ item.name }}' type '{{ item.type }}' is valid."
+  loop: "{{ rsyslog_templates | default([]) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: rsyslog_templates | default([]) | length > 0
+
