@@ -33,7 +33,7 @@ template(name="{{ tmpl.name }}" type="string" string="{{ tmpl.properties }}")
 {% endfor %}
 
 {% if rsyslog_forward_enable | default(false) %}
-# Forward raw syslog to Vector over {{ rsyslog_forward_protocol | upper }}
+# Forward raw syslog to {{ rsyslog_forward_target }} over {{ rsyslog_forward_protocol | upper }}
 *.* action(
   type="omfwd"
   target="{{ rsyslog_forward_target }}"

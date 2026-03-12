@@ -8,7 +8,7 @@ rsyslog_listener_proto: # udp | tcp | relp | imtls
   - tcp   
 
 # Forwarding options
-rsyslog_forward_enable: true
+rsyslog_forward_enable: false
 rsyslog_forward_target: "127.0.0.1"
 rsyslog_forward_port: 1514
 rsyslog_forward_protocol: "tcp"
