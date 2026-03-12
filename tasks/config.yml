@@ -8,6 +8,17 @@
     mode: '0644'
   notify: restart rsyslog
 
+- name: Validate rsyslog configuration
+  command: rsyslogd -N1
+  register: rsyslog_validate
+  changed_when: false
+  failed_when: rsyslog_validate.rc != 0
+
+- name: Alert if rsyslog configuration is invalid
+  debug:
+    msg: "rsyslog configuration validation failed:\n{{ rsyslog_validate.stderr }}"
+  when: rsyslog_validate.rc != 0
+
 - name: Ensure rsyslog is enabled and running
   service:
     name: rsyslog

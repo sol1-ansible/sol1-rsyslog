@@ -17,7 +17,7 @@ rsyslog_forward_protocol: "tcp"
 rsyslog_configure_firewall: true
 
 # Where remote logs are stored
-rsyslog_remote_root: /var/log/remote
+# rsyslog_remote_root: /var/log/remote
 # rsyslog_template_remote_log:
 #
 #   # type: list — properties is a list of rsyslog property()/constant() statements

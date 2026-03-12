@@ -4,3 +4,11 @@
     name: "{{ _rsyslog_install_packages }}"
     state: present
 
+- name: Create remote log directory
+  file:
+    path: "{{ rsyslog_remote_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: rsyslog_remote_root is defined
