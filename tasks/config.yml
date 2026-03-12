@@ -25,19 +25,17 @@
     state: started
     enabled: true
 
-- name: Check if firewalld is running
-  command: firewall-cmd --state
-  register: _rsyslog_firewalld_state
+- name: Check if firewall-cmd is available
+  command: which firewall-cmd
+  register: _rsyslog_firewall_cmd_check
   changed_when: false
   failed_when: false
   when: rsyslog_configure_firewall | bool
 
 - name: Open firewall port (firewalld)
-  ansible.posix.firewalld:
-    port: "{{ rsyslog_listener_port }}/{{ item }}"
-    permanent: true
-    state: enabled
-    immediate: "{{ _rsyslog_firewalld_state.rc == 0 }}"
+  command: firewall-cmd --permanent --add-port={{ rsyslog_listener_port }}/{{ item }}
+  register: _rsyslog_firewalld_result
+  changed_when: "'ALREADY_ENABLED' not in _rsyslog_firewalld_result.stdout"
   loop: "{{ rsyslog_listener_proto }}"
-  when: rsyslog_configure_firewall | bool
+  when: rsyslog_configure_firewall | bool and (_rsyslog_firewall_cmd_check.rc | default(1)) == 0
   notify: reload firewalld

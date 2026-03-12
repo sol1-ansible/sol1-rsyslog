@@ -5,6 +5,6 @@
     state: restarted
 
 - name: reload firewalld
-  service:
-    name: firewalld
-    state: reloaded
+  command: firewall-cmd --reload
+  failed_when: false
+  changed_when: false
