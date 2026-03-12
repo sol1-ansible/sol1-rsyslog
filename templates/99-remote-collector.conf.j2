@@ -10,9 +10,6 @@ input(
 )
 {% endfor %}
 
-# Automatically create any needed directories
-global(createDirs="on")
-
 {% for tmpl in rsyslog_templates | default([]) %}
 # Template: {{ tmpl.name }}
 {% if tmpl.type == 'list' %}
