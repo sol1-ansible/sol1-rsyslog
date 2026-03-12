@@ -1,0 +1,34 @@
+{{ ansible_managed | comment }}
+
+
+{% for proto in rsyslog_listener_proto %}
+# Accept remote logs over {{ proto }}
+module(load="im{{ proto }}")
+input(
+  type="im{{ proto }}"
+  port="{{ rsyslog_listener_port }}"
+)
+{% endfor %}
+
+# Automatically create any needed directories
+global(createDirs="on")
+
+# Logs saved to {{ rsyslog_remote_log }}
+template(name="PerHost" type="string" string="{{ rsyslog_remote_log }}")
+
+
+*.*  ?PerHostLog
+
+
+{% if rsyslog_forward_enable | default(false) %}
+# Forward raw syslog to Vector over {{ rsyslog_forward_protocol | upper }}
+*.* action(
+  type="omfwd"
+  target="{{ rsyslog_forward_target }}"
+  port="{{ rsyslog_forward_port }}"
+  protocol="{{ rsyslog_forward_protocol }}"
+  TCP_Framing="octet-counted"
+  KeepAlive="on"
+  ResendLastMSGOnReconnect="on"
+)
+{% endif %}

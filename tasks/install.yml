@@ -1,0 +1,6 @@
+---
+- name: Ensure rsyslog is present
+  package:
+    name: rsyslog
+    state: present
+

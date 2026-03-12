@@ -1,0 +1,18 @@
+# Port/protocol the server listens on
+rsyslog_listener_port: 514
+rsyslog_listener_proto: # udp | tcp | relp | imtls
+  - udp   
+  - tcp   
+
+# Where remote logs are stored
+rsyslog_remote_root: /var/log
+rsyslog_remote_log: "{{ rsyslog_remote_root }}/%HOSTNAME%/%PROGRAMNAME%.log"
+
+# Forwarding options
+rsyslog_forward_enable: true
+rsyslog_forward_target: "127.0.0.1"
+rsyslog_forward_port: 1514
+rsyslog_forward_protocol: "tcp"
+
+# Optional firewall management (firewalld)
+rsyslog_configure_firewall: true

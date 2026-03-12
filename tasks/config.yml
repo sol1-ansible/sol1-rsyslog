@@ -1,0 +1,25 @@
+---
+- name: Deploy listener configuration
+  template:
+    src: 99-remote-collector.conf.j2
+    dest: /etc/rsyslog.d/99-remote-collector.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart rsyslog
+
+- name: Ensure rsyslog is enabled and running
+  service:
+    name: rsyslog
+    state: started
+    enabled: true
+
+- name: Open firewall port (firewalld)
+  when: rsyslog_configure_firewall | bool
+  firewalld:
+    service: "{{ rsyslog_listener_proto }}-port"
+    port: "{{ rsyslog_listener_port }}/{{ rsyslog_listener_proto }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+  notify: reload firewalld
