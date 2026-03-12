@@ -10,8 +10,8 @@
       paths:
         - "{{ role_path }}/vars"
 
-- name: Validate
-  include_tasks: validation.yml
+- name: Vars
+  include_tasks: vars.yml
 
 - name: Install
   include_tasks: install.yml
